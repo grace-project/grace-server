@@ -11,20 +11,20 @@ services:
     container_name: grace_postgres
     restart: always
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./docker/postgres/data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=grace
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
   
   django:
-    build: ./project/
+    build: ./project
     container_name: grace_django
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./project/:/project/
+      - ./project:/project
     environment:
-      - DEBUG=1
+      - DEBUG=true
       - SECRET_KEY=d@nz3krc%97qc$$*&u6mgjl$$oi3whrjeg2b&a!xqq&=t!*)ge8_
       - DB_HOST=postgres
       - DB_PORT=5432

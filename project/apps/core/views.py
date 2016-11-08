@@ -1,5 +1,9 @@
-from django.http import HttpResponse
+from django.views.generic.base import TemplateView
 
 
-def home(request):
-	return HttpResponse("Tis but a backend.")
+
+class IndexPageView(TemplateView):
+	"""
+	View for the index page.
+	"""
+	template_name = "core/index.html"

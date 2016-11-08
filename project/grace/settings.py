@@ -25,7 +25,7 @@ sys.path.append(os.path.join(BASE_DIR, "apps/"))
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ["DEBUG"]
 
 ALLOWED_HOSTS = []
 
@@ -39,15 +39,19 @@ INSTALLED_APPS = [
 	"django.contrib.messages",
 	"django.contrib.staticfiles",
 
+	"debug_toolbar",
+	"compressor",
 	"channels",
 	"rest_framework",
 	"rest_framework.authtoken",
 
 	"core",
 	"user",
+	"dialogue",
 ]
 
 MIDDLEWARE = [
+	"debug_toolbar.middleware.DebugToolbarMiddleware",
 	"django.middleware.security.SecurityMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.common.CommonMiddleware",
@@ -130,3 +134,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+STATICFILES_FINDERS = (
+	"django.contrib.staticfiles.finders.FileSystemFinder",
+	"django.contrib.staticfiles.finders.AppDirectoriesFinder",
+	"compressor.finders.CompressorFinder",
+)
+
+# Static file compression
+COMPRESS_ENABLED = not DEBUG

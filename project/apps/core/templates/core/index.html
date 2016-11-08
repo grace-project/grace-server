@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<h1>Grace</h1>
+	{% include 'dialogue/input.html' %}
+	{% include 'dialogue/results.html' %}
+{% endblock %}
+
+{% block headercss %}
+	<link rel="stylesheet" href="{% static 'css/dialogue/dialogue.css' %}">
+{% endblock %}
+
+{% block footerjs %}
+	<script src="{% static 'js/dialogue/query.js' %}"></script>
+	<script src="{% static 'js/dialogue/microphone.js' %}"></script>
+	<script src="{% static 'js/dialogue/submit.js' %}"></script>
+{% endblock %}

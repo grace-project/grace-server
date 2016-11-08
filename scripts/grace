@@ -1,0 +1,99 @@
+#!/bin/bash
+cd "$(dirname $0)/.."
+
+
+#
+# shortcut function for docker-compose as superuser 
+#
+function compose() {
+	sudo docker-compose $@
+}
+
+
+#
+# shortcut function for managing Django project within container 
+#
+function manage() {
+	sudo docker-compose run --rm django python manage.py $@
+}
+
+
+case "$1" in
+
+	#
+	# equivalent to 'docker-compose'
+	#
+	compose)
+		compose ${@:2} ;;
+
+	#
+	# equivalent to 'manage.py ...'
+	#
+	manage)
+		manage ${@:2} ;;
+
+	#
+	# equivalent to 'manage.py shell'
+	#
+	shell)
+		manage shell
+		;;
+		
+	#
+	# run migrations
+	#
+	migrate)
+		manage makemigrations
+		manage migrate ;;
+
+	#
+	# start containers as daemons
+	#
+	start)
+		compose up -d ;;
+
+	#
+	# stop containers (optional: --remove-orphans)
+	#
+	stop)
+		compose down ${@:2} ;;
+
+	#
+	# equivalent to 'manage.py runserver 0.0.0.0:8000'
+	#
+	debug)
+		manage runserver 0.0.0.0:8000
+		;;
+
+	#
+	# remove .pyc/.pyo files (optional: --remove-migrations)
+	#
+	clean)
+		sudo py3clean .
+		if [ "$2" = "--remove-migrations" ]; then
+			sudo find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+		fi ;;
+
+	#
+	# chown all files to '$LOGNAME'
+	#
+	chown)
+		sudo chown -R $LOGNAME: . ;;
+
+	#
+	# list commands
+	#
+	*)
+		echo -e "\e[1mGrace\e[0m"
+		echo -e "  compose\t equivalent to 'docker-compose'"
+		echo -e "  manage\t equivalent to 'python manage.py ...'"
+		echo -e "  shell\t\t equivalent to 'manage.py shell'"
+		echo -e "  migrate\t run migrations"
+		echo -e "  start\t\t start containers"
+		echo -e "  stop\t\t stop containers [--remove-orphans]"
+		echo -e "  debug\t\t equivalent to 'manage.py runserver 0.0.0.0:8000'"
+		echo -e "  clean\t\t remove .pyc/.pyo files [--remove-migrations]"
+		echo -e "  chown\t\t chown all files to '$LOGNAME'"
+		;;
+
+esac

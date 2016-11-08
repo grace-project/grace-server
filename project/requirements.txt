@@ -1,5 +1,10 @@
+# Python
 psycopg2==2.6.2
+asgi_redis==0.14.1
+
+# Django
 Django==1.10.2
+django_compressor
+django-debug-toolbar
 channels==0.17.3
 djangorestframework==3.5.1
-asgi_redis==0.14.1

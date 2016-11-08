@@ -1,20 +1,21 @@
 import os
 import time
-import socket
+import psycopg2
 
 
 def wait_for_db(timeout_attempts=30):
 	"""
 	Blocking call until database service is available.
 	"""
-	host_port = (os.environ["DB_HOST"], int(os.environ["DB_PORT"]))
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	_ = os.environ
+	login = "host='%s' port='%s' dbname='%s' user='%s' password='%s'" % (
+		_["DB_HOST"], _["DB_PORT"], _["DB_NAME"], _["DB_USER"], _["DB_PASS"]
+	)
 
 	while 1 and timeout_attempts > 0:
 		try:
-			sock.connect(host_port)
-			sock.close()
-			time.sleep(1)
+			conn = psycopg2.connect(login)
+			conn.close()
 			break
 		except:
 			timeout_attempts -= 1
